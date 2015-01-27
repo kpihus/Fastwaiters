@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Fastwaiters</title>
+
+    <!-- Bootstrap -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/fastwaiters.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+<input type="hidden" id="server" value="http://localhost/menyy/web/app_dev.php">
+<input type="hidden" id="clientcode" value="11984577">
+
+<div class="all">
+    <div class="main" data-bind="visible: router.Page()=='Login', template: {name: 'loginPageTpl'}"></div>
+    <div class="main" data-bind="visible: router.Page()=='Tables', template: {name: 'tablePageTpl'}"></div>
+</div>
+
+
+
+
+<!--Templates-->
+<script type="text/html" id="loginPageTpl">
+    <div id="pinform">
+        <input type="password" name="pinfield" data-bind="value: login.pincode" id="pinfield" autocomplete="off">
+        <div style="display: none" class="alert alert-danger pinalert" role="alert">
+            Wrong pin code</div>
+    </div>
+
+    <div id="pinpad">
+        <table>
+            <thead>
+            <tr>
+                <td colspan="3">
+
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><button type="button" data-nr="1" class="numbtn">1</button></td>
+                <td><button type="button" data-nr="2" class="numbtn">2</button></td>
+                <td><button type="button" data-nr="3" class="numbtn">3</button></td>
+            </tr>
+            <tr>
+                <td><button type="button" data-nr="4" class="numbtn">4</button></td>
+                <td><button type="button" data-nr="5" class="numbtn">5</button></td>
+                <td><button type="button" data-nr="6" class="numbtn">6</button></td>
+            </tr>
+            <tr>
+                <td><button type="button" data-nr="7" class="numbtn">7</button></td>
+                <td><button type="button" data-nr="8" class="numbtn">8</button></td>
+                <td><button type="button" data-nr="9" class="numbtn">9</button></td>
+            </tr>
+            <tr>
+                <td><button type="button" class="clrbtn"><span class="glyphicon glyphicon-chevron-left"></span></button></td>
+                <td><button type="button" data-nr="0" class="numbtn">0</button></td>
+                <td><button type="button" class="entbtn"><span class="glyphicon glyphicon-ok"></span></button></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+<script type="text/html" id="tablePageTpl">
+    <div id="tableList">
+        <table>
+            <tbody data-bind="foreach: { data: tables.columns, as: 'column' }">
+            <tr data-bind="foreach: column">
+                <td>
+                    <button data-bind="text: name">A</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</script>
+
+
+<script src="js/jquery-2.1.1.min.js"></script>
+<script src="js/knockout-3.2.0.js"></script>
+<script src="js/knockout.mapping-latest.js"></script>
+<!--//# sourceMappingURL=js/jquery-2.1.1.min.map-->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/fastwaiters.js"></script>
+<script src="js/fastclick.js"></script>
+<!--<script src="phonegap.js"></script>-->
+</body>
+</html>
