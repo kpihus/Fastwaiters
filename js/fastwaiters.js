@@ -14,10 +14,7 @@ $(document).ready(function(){
     var main = $('.main');
     var server = $('#server').val();
     var clientcode = $('#clientcode').val();
-
-
-
-
+    var numbtn = $('.numbtn');
     /*
      Knockout vm
      */
@@ -41,38 +38,49 @@ $(document).ready(function(){
         this.id=ko.observable(data.id);
         this.name=ko.observable(data.name);
     };
+    var LangItem = function LangItem(data){
+        this.tag = ko.observable(data.tag);
+        this.name = ko.observable(data.name);
+    };
 
     var Tables = function Vm() {
         this.tableItems  = ko.observableArray([]);
+
+
         this.columnCount = ko.observable(3);
 
         this.columns = ko.computed(function() {
             var columns     = [],
                 itemCount   = this.tableItems().length,
                 begin       = 0;
-
-            // we use begin + 1 to compare to length, because slice
-            // uses zero-based index parameters
             while (begin + 1 < itemCount) {
                 columns.push( this.tableItems.slice(begin, begin + this.columnCount()) );
                 begin += this.columnCount();
             }
-
             return columns;
 
-            // don't forget to set `this` inside the computed to our Vm
         }, this);
+    };
+
+    var Langs = function Langs(){
+        this.langItems  = ko.observableArray([]);
+        this.selLang = ko.observable();
+        this.selLangTag = ko.observable();
+        this.setLanguage = function(){
+            vm.lang.selLang(this.name());
+            vm.lang.selLangTag(this.tag());
+        };
     };
 
     vm = {
         router: new Router(),
         login: new Auth(),
-        tables: new Tables()
+        tables: new Tables(),
+        lang: new Langs()
     };
 
     ko.applyBindings(vm);
     vm.login.pincode('');
-
 
     /*
      Preflight check
@@ -84,8 +92,6 @@ $(document).ready(function(){
         }else{
             vm.router.GoToLogin();
         }
-
-
     });
 
     /*
@@ -95,7 +101,8 @@ $(document).ready(function(){
     var pinfield = $(main).find('.pinfiled');
     var flag = false;
     //Add pin code
-    $(main).on('click','.numbtn', function () {
+    $(main).on('click','.numbtn',function(){
+    //$(numbtn).bind('touchstart',function () {
         var pinfield = $(main).find('.pinform').find('.pinfiled');
         if (!flag) {
             $('.pinalert').slideUp(200);
@@ -109,14 +116,22 @@ $(document).ready(function(){
         }
         return false
     });
-    //Clear button
-    $(main).on('click','.clrbtn', function () {
-        var nr=vm.login.pincode();
-        pinval = nr.substr(0,nr.length-1);
-        vm.login.pincode(pinval);
+    $(numbtn).bind('touchend', function () {
+        $(this).css('background-color','rgba(255,255,255,0.9)');
     });
+
+    //Clear button
+    $(main).on('click','.clrbtn', function (){
+        //$('.clrbtn').bind('touchstart', function () {
+            var nr=vm.login.pincode();
+            pinval = nr.substr(0,nr.length-1);
+            vm.login.pincode(pinval);
+        });
+
+
     //Submit pin code
-    $(main).on('click','.entbtn', function () {
+    $(main).on('click','.entbtn',function(){
+    //$('.entbtn').bind('touchstart', function () {
         var pin = $('#pinfield').val();
         $.ajax({
             url: server+"/menu/app/auth",
@@ -132,6 +147,7 @@ $(document).ready(function(){
                     vm.pincode('');
                 }else{
                     renderTables(data.tables);
+                    renderLanguages(data);
                 }
             }
         })
@@ -153,7 +169,8 @@ $(document).ready(function(){
                 client: clientcode
             },
             success: function(data){
-              renderTables(data);
+                renderTables(data.tables);
+                renderLanguages(data);
             }
         })
     }
@@ -168,6 +185,26 @@ $(document).ready(function(){
         //$(main).html($('#tablesTmpl').html());
         vm.router.GoToTable();
     }
+    function renderLanguages(data){
+        vm.lang.selLang(data.deflang);
+        vm.lang.selLangTag(data.deflangtag);
+        $.each(data.langs, function (index, value) {
+            vm.lang.langItems.push(new LangItem({
+                tag: value.tag,
+                name: value.name
+            }))
+        })
+    }
+
+    //Post table/lang info to server and get menu
+    $(main).on('click','.chstable', function () {
+        var langtag = vm.lang.selLangTag();
+        var tableid = $(this).data('id');
+
+        console.log(langtag+' '+tableid);
+
+
+    });
 
 
     /*
