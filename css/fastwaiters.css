@@ -182,3 +182,22 @@ height: 110px;
 }
 
 .up { bottom:110% !important; top:auto !important; }
+
+/*menu view*/
+.menuitem{
+    text-transform: uppercase;
+}
+#hcatname{
+    color: #fff;
+    height: 63px;
+    line-height: 63px;
+    font-size: 18px;
+    font-family: "Gotham-Medium",Arial,Helvetica,sans-serif;
+    text-align: center;
+    min-width: 107px;
+    float: left;
+    text-transform: uppercase;
+}
+#notes{
+    font-size: 20px;
+}

@@ -13,6 +13,7 @@ $(document).ready(function(){
      */
     var main = $('.main');
     var server = $('#server').val();
+    var base = $('#base').val();
     var clientcode = $('#clientcode').val();
     var numbtn = $('.numbtn');
     /*
@@ -21,6 +22,8 @@ $(document).ready(function(){
 
     var Router = function Router(currentPAge) {
         this.Page = ko.observable(currentPAge);
+        this.server = ko.observable();
+        this.base = ko.observable();
 
         this.GoToLogin = function () {
             this.Page('Login');
@@ -46,11 +49,8 @@ $(document).ready(function(){
         this.name = ko.observable(data.name);
     };
 
-
     var Tables = function Vm() {
         this.tableItems  = ko.observableArray([]);
-
-
         this.columnCount = ko.observable(3);
 
         this.columns = ko.computed(function() {
@@ -78,18 +78,38 @@ $(document).ready(function(){
     var Product = function Product(){
         this.catList = ko.observableArray([]);
         this.prodList = ko.observableArray([]);
+        this.pendingOrder = ko.observableArray([]);
         this.waiter = ko.observable();
         this.waiterid=ko.observable();
         this.currency=ko.observable();
 
         this.selectedCategory = ko.observable();
+        this.selectedCatname = ko.observable();
+
+        this.orderNotes = ko.observable();
 
         this.selectCategory= function(category){
-            $('.catpage').hide(500);
+            var catpage =$('.catpage');
+            $(catpage).hide(500);
             $('#sidemenu').hide(500);
             vm.prod.selectedCategory(category.catid);
-            $('.catpage').show(500);
+            vm.prod.selectedCatname(category.catname);
+            $(catpage).show(500);
         };
+        this.addPendingOrder = function(product){
+            vm.prod.pendingOrder.push(product);
+
+        };
+        this.removeItem = function () {
+            vm.prod.pendingOrder.remove(this);
+        };
+        this.orderPrice = ko.computed(function(){
+            var grandtotal = 0;
+            ko.utils.arrayForEach(this.pendingOrder(), function (item) {
+                grandtotal=grandtotal+parseFloat(item.price);
+            });
+            return grandtotal.toFixed(2);
+        },this)
 
     };
 
@@ -103,6 +123,8 @@ $(document).ready(function(){
 
     ko.applyBindings(vm);
     vm.login.pincode('');
+    vm.router.server(server);
+    vm.router.base(base);
 
     /*
      Preflight check
@@ -124,7 +146,7 @@ $(document).ready(function(){
     var flag = false;
     //Add pin code
     $(main).on('click','.numbtn',function(){
-    //$(numbtn).bind('touchstart',function () {
+        //$(numbtn).bind('touchstart',function () {
         var pinfield = $(main).find('.pinform').find('.pinfiled');
         if (!flag) {
             $('.pinalert').slideUp(200);
@@ -145,15 +167,15 @@ $(document).ready(function(){
     //Clear button
     $(main).on('click','.clrbtn', function (){
         //$('.clrbtn').bind('touchstart', function () {
-            var nr=vm.login.pincode();
-            pinval = nr.substr(0,nr.length-1);
-            vm.login.pincode(pinval);
-        });
+        var nr=vm.login.pincode();
+        pinval = nr.substr(0,nr.length-1);
+        vm.login.pincode(pinval);
+    });
 
 
     //Submit pin code
     $(main).on('click','.entbtn',function(){
-    //$('.entbtn').bind('touchstart', function () {
+        //$('.entbtn').bind('touchstart', function () {
         var pin = $('#pinfield').val();
         $.ajax({
             url: server+"/menu/app/auth",
@@ -252,11 +274,37 @@ $(document).ready(function(){
      */
 
     /*
-    Prodpage section
+     Prodpage section
      */
-    $(main).on('click','#startmenu', function () {
-        $('#sidemenu').show(500);
+    $(main).on('click','#closemenu', function () {
+        $('#sidemenu').hide(300);
     });
+    $(main).on('click','#startmenu', function () {
+        $('#sidemenu').show(300);
+    });
+    $(main).on('click','#orderopen', function () {
+        $('#ordermenu').show(300);
+    });
+    $(main).on('click','#closeorder', function () {
+        $('#ordermenu').hide(300);
+    });
+    $(main).on('click','.orderbox', function () {
+        $(this).closest('tr').effect("transfer",{ to: $("#prodcount") }, 500);
+        $('#orderopen').effect('highlight');
+    });
+    $(main).on('click','#conforder', function () {
+        if (vm.prod.pendingOrder().length>0) {
+            makeOrder();
+        } else {
+           $('#totalsum').effect('highlight',500);
+        }
+    });
+    function makeOrder(){
+        var items = ko.mapping.toJS(vm.prod.pendingOrder());
+        console.log(items);
+    }
+
+
 
     /*
      END Prodpage section

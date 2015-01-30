@@ -32,12 +32,16 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/fastwaiters.css" rel="stylesheet">
     <link href="css/cibus.css" rel="stylesheet">
+    <link href="css/jquery-ui.min.css" rel="stylesheet">
+    <link href="css/jquery-ui.theme.min.css" rel="stylesheet">
+    <link href="css/jquery-ui.structure.min.css" rel="stylesheet">
     <title>Hello World</title>
 </head>
 <body>
 
 <div class="app">
     <input type="hidden" id="server" value="http://localhost/menyy/web/app_dev.php">
+    <input type="hidden" id="base" value="http://localhost/menyy/web">
     <input type="hidden" id="clientcode" value="11984577">
     <div class="all">
         <div class="main" data-bind="visible: router.Page()=='Login', template: {name: 'loginPageTpl'}"></div>
@@ -115,20 +119,20 @@
             <div id="headrow" class="custcolor">
                 <div id="startmenu">
                     <div id="menubtn"></div>
-                    <div id="hcatname"></div>
+                    <div id="hcatname" data-bind="text: prod.selectedCatname"></div>
                 </div>
                 <div id="rightbtn">
                     <div id="invopen" class="headbtn">ARVE</div>
                     <div id="callservice" class="headbtn">KUTSU TEENIDAJA</div>
                     <div id="orderopen" class="headbtn">
                         <div>TELLIMUS
-                            <span id="prodcount">0</span>
+                            <span id="prodcount" data-bind="text: $root.prod.pendingOrder().length"></span>
                         </div>
                     </div>
                 </div>
 
             </div>
-
+<!--SIDEMENU-->
             <div id="sidemenu">
                 <div id="closemenu">
                     <span class="glyphicon glyphicon-remove"></span>
@@ -148,18 +152,21 @@
                     </ul>
                 </div>
             </div>
-
+            <!--END SIDEMENU -->
+            <!--CATPAGE -->
             <div class="catpage">
                 <table class="catprods">
                     <tbody data-bind="foreach: prod.prodList()[prod.selectedCategory()]">
                     <tr><td>
                         <table class="itemtable">
                             <tr>
+                            <!-- ko if: picurl -->
                                 <td style="width: 188px; height: 125px">
                                     <div class="imgbox">
-                                        <img height="125" rel="zoom" src="">
+                                        <img height="125" rel="zoom" data-bind="attr: { src: $root.router.base() +'/'+ picurl }">
                                     </div>
                                 </td>
+                            <!-- /ko -->
                                 <td class="namerow">
                                     <div class="prodname" data-bind="text: name"></div>
                                     <div class="proddesc">
@@ -169,14 +176,14 @@
                                     </div>
                                 </td>
                                 <td style="width: 150px"><span class="prodprice custtext" data-bind="text: price + ' ' + vm.prod.currency()"></span></td>
-                                <td class="orderbox">
+                                <td class="orderbox" data-bind="click: $root.prod.addPendingOrder">
                                     <div class="orderbtn custtext">
                                         <span class="glyphicon glyphicon-plus-sign"></span>
                                     </div>
                                 </td>
                                 <td class="itemcount">
                                     <div style="display: none">
-                                        <div class="countnr" data-id="">0</div>
+                                        <div class="countnr"></div>
                                     </div>
                                 </td>
                             </tr>
@@ -184,13 +191,62 @@
                     </tbody>
                 </table>
             </div>
+            <!--END CATPAGE -->
+            <!--ORDER VIEW -->
+            <div id="ordermenu" style="display: none">
+                <div id="closeorder">
+                    <span class="glyphicon glyphicon-remove"></span>
+                    <span style="font-size: 14px">VAATA/MUUDA TELLIMUST</span>
+                </div>
+                <div id="orderlist">
+                    <table id="ordertbl">
+                        <tbody data-bind="foreach: prod.pendingOrder">
+                        <tr>
+                            <td class="rembtn" data-bind="click: vm.prod.removeItem">
+                                <span class="glyphicon glyphicon-minus-sign"></span>
+                            </td>
+                            <td class="orderprodname" data-bind="text: name"></td>
+                            <td class="orderprice">
+                                <span class="pricetag" data-bind="text: price"></span>
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+
+
+
+                </div>
+
+                <div id="totalsum">
+                    <span id="sumtext">SUMMA: </span>
+                    <span id="sumam" class="totprice" data-bind="text: vm.prod.orderPrice"></span><span class="totprice" data-bind="text: prod.currency"></span>
+                </div>
+                <div id="notesbox">
+                    <label for="notes">MÄRKUSED</label>
+                    <textarea id="notes" name="notes" rows="5" cols="30" data-bind="value: prod.orderNotes"></textarea>
+                </div>
+                <div id="makeorder" style="text-align: right">
+                    <button id="conforder" type="button" class="fwbtn">TELLI</button>
+                </div>
+                <div id="ajload">
+
+                </div>
+
+
+            </div>
+
+            <!--END ORDERVIEW -->
 </script>
+
+
 
     </div>
 
 
 </div>
 <script src="js/jquery-2.1.1.min.js"></script>
+<script src="js/jquery-ui.min.js"></script>
 <script src="js/knockout-3.2.0.js"></script>
 <script src="js/knockout.mapping-latest.js"></script>
 <!--//# sourceMappingURL=js/jquery-2.1.1.min.map-->
