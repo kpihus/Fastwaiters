@@ -20,116 +20,152 @@
     under the License.
 -->
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <meta name="format-detection" content="telephone=no" />
-        <meta name="msapplication-tap-highlight" content="no" />
-        <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-4323 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />
 
 
-        <link rel="stylesheet" type="text/css" href="css/index.css" />
-                    <link href="css/bootstrap.min.css" rel="stylesheet">
-         <link href="css/fastwaiters.css" rel="stylesheet">
-        <title>Hello World</title>
-    </head>
-    <body>
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link href="css/fastwaiters.css" rel="stylesheet">
+    <link href="css/cibus.css" rel="stylesheet">
+    <title>Hello World</title>
+</head>
+<body>
 
-        <div class="app">
-          <input type="hidden" id="server" value="http://localhost/menyy/web/app_dev.php">
-<input type="hidden" id="clientcode" value="11984577">  
-<div class="all">
-    <div class="main" data-bind="visible: router.Page()=='Login', template: {name: 'loginPageTpl'}"></div>
-    <div class="main" data-bind="visible: router.Page()=='Tables', template: {name: 'tablePageTpl'}"></div>
+<div class="app">
+    <input type="hidden" id="server" value="http://localhost/menyy/web/app_dev.php">
+    <input type="hidden" id="clientcode" value="11984577">
+    <div class="all">
+        <div class="main" data-bind="visible: router.Page()=='Login', template: {name: 'loginPageTpl'}"></div>
+        <div class="main" data-bind="visible: router.Page()=='Tables', template: {name: 'tablePageTpl'}"></div>
+        <div class="main" data-bind="visible: router.Page()=='Products', template: {name: 'prodPageTpl'}"></div>
 
 
-    <!--Templates-->
-<script type="text/html" id="loginPageTpl">
-    <div id="pinform">
-        <input type="password" name="pinfield" data-bind="value: login.pincode" id="pinfield" autocomplete="off">
-        <div style="display: none" class="alert alert-danger pinalert" role="alert">
-            Wrong pin code</div>
-    </div>
-
-    <div id="pinpad">
-        <table>
-            <thead>
-            <tr>
-                <td colspan="3">
-
-                </td>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><button type="button" data-nr="1" class="numbtn">1</button></td>
-                <td><button type="button" data-nr="2" class="numbtn">2</button></td>
-                <td><button type="button" data-nr="3" class="numbtn">3</button></td>
-            </tr>
-            <tr>
-                <td><button type="button" data-nr="4" class="numbtn">4</button></td>
-                <td><button type="button" data-nr="5" class="numbtn">5</button></td>
-                <td><button type="button" data-nr="6" class="numbtn">6</button></td>
-            </tr>
-            <tr>
-                <td><button type="button" data-nr="7" class="numbtn">7</button></td>
-                <td><button type="button" data-nr="8" class="numbtn">8</button></td>
-                <td><button type="button" data-nr="9" class="numbtn">9</button></td>
-            </tr>
-            <tr>
-                <td><button type="button" class="clrbtn"><span class="glyphicon glyphicon-chevron-left"></span></button></td>
-                <td><button type="button" data-nr="0" class="numbtn">0</button></td>
-                <td><button type="button" class="entbtn"><span class="glyphicon glyphicon-ok"></span></button></td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-</script>
-<script type="text/html" id="tablePageTpl">
-    <div id="table_div">
-        <table id="tables">
-            <tbody data-bind="foreach: { data: tables.columns, as: 'column' }">
-            <tr data-bind="foreach: column">
-                <td>
-                    <button class="chstable" data-bind='text: name, attr: {"data-id":id}'>A</button>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-    <div id="langSelect">
-        <div class="btn-group">
-            <div  class="dropdown-toggle langmain" data-toggle="dropdown">
-                <span class="langspan" style="" data-bind="text: lang.selLang"></span>
+        <!--Templates-->
+        <script type="text/html" id="loginPageTpl">
+            <div id="pinform">
+                <input type="password" name="pinfield" data-bind="value: login.pincode" id="pinfield" autocomplete="off">
+                <div style="display: none" class="alert alert-danger pinalert" role="alert">
+                    Wrong pin code</div>
             </div>
-            <ul class="dropdown-menu up langmenu" role="menu" data-bind="foreach: lang.langItems">
-                <li data-lang=""><span class="langspan_popup" data-bind="text: name, click: $root.lang.setLanguage" style=""></span></li>
-            </ul>
-        </div>
 
+            <div id="pinpad">
+                <table>
+                    <thead>
+                    <tr>
+                        <td colspan="3">
 
+                        </td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <td><button type="button" data-nr="1" class="numbtn">1</button></td>
+                        <td><button type="button" data-nr="2" class="numbtn">2</button></td>
+                        <td><button type="button" data-nr="3" class="numbtn">3</button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" data-nr="4" class="numbtn">4</button></td>
+                        <td><button type="button" data-nr="5" class="numbtn">5</button></td>
+                        <td><button type="button" data-nr="6" class="numbtn">6</button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" data-nr="7" class="numbtn">7</button></td>
+                        <td><button type="button" data-nr="8" class="numbtn">8</button></td>
+                        <td><button type="button" data-nr="9" class="numbtn">9</button></td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" class="clrbtn"><span class="glyphicon glyphicon-chevron-left"></span></button></td>
+                        <td><button type="button" data-nr="0" class="numbtn">0</button></td>
+                        <td><button type="button" class="entbtn"><span class="glyphicon glyphicon-ok"></span></button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </script>
+        <script type="text/html" id="tablePageTpl">
+            <div id="table_div">
+                <table id="tables">
+                    <tbody data-bind="foreach: { data: tables.columns, as: 'column' }">
+                    <tr data-bind="foreach: column">
+                        <td>
+                            <button class="chstable" data-bind='text: name, attr: {"data-id":id}'>A</button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="langSelect">
+                <div class="btn-group">
+                    <div  class="dropdown-toggle langmain" data-toggle="dropdown">
+                        <span class="langspan" style="" data-bind="text: lang.selLang"></span>
+                    </div>
+                    <ul class="dropdown-menu up langmenu" role="menu" data-bind="foreach: lang.langItems">
+                        <li data-lang=""><span class="langspan_popup" data-bind="text: name, click: $root.lang.setLanguage" style=""></span></li>
+                    </ul>
+                </div>
+            </div>
+        </script>
 
+        <script type="text/html" id="prodPageTpl">
+            <div id="headrow" class="custcolor">
+                <div id="startmenu">
+                    <div id="menubtn"></div>
+                    <div id="hcatname"></div>
+                </div>
+                <div id="rightbtn">
+                    <div id="invopen" class="headbtn">ARVE</div>
+                    <div id="callservice" class="headbtn">KUTSU TEENIDAJA</div>
+                    <div id="orderopen" class="headbtn">
+                        <div>TELLIMUS
+                            <span id="prodcount">0</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="sidemenu">
+                <div id="closemenu">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </div>
+                <div class="cLogo">
+                    <img src="">
+                </div>
+
+                <div id="waiter">
+                    <div>Teid teenindab</div>
+                    <div class="waitername">Keegi Teine</div>
+                </div>
+
+                <div id="catlist">
+                    <ul data-bind="foreach: cat.catList">
+                        <li class="menuitem" data-bind='text: catname, attr: {"data-id":catid}'></li>
+                    </ul>
+                </div>
+
+            </div>
+</script>
 
     </div>
 
-
-</script>
 
 </div>
-
-            
-        </div>
-        <script src="js/jquery-2.1.1.min.js"></script>
+<script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/knockout-3.2.0.js"></script>
 <script src="js/knockout.mapping-latest.js"></script>
 <!--//# sourceMappingURL=js/jquery-2.1.1.min.map-->
 <script src="js/bootstrap.min.js"></script>
 <script src="js/fastwaiters.js"></script>
 <script src="js/fastclick.js"></script>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-        <script type="text/javascript">
-            app.initialize();
-        </script>
-    </body>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+<script type="text/javascript">
+    app.initialize();
+</script>
+</body>
 </html>

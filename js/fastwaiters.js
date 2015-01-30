@@ -27,6 +27,9 @@ $(document).ready(function(){
         };
         this.GoToTable = function(){
             this.Page('Tables');
+        };
+        this.GoToProducts = function(){
+            this.Page('Products');
         }
     };
 
@@ -42,6 +45,7 @@ $(document).ready(function(){
         this.tag = ko.observable(data.tag);
         this.name = ko.observable(data.name);
     };
+
 
     var Tables = function Vm() {
         this.tableItems  = ko.observableArray([]);
@@ -71,12 +75,16 @@ $(document).ready(function(){
             vm.lang.selLangTag(this.tag());
         };
     };
+    var Category = function Category(){
+        this.catList = ko.observableArray([]);
+    };
 
     vm = {
         router: new Router(),
         login: new Auth(),
         tables: new Tables(),
-        lang: new Langs()
+        lang: new Langs(),
+        cat: new Category()
     };
 
     ko.applyBindings(vm);
@@ -202,6 +210,22 @@ $(document).ready(function(){
         var tableid = $(this).data('id');
 
         console.log(langtag+' '+tableid);
+        $.ajax({
+            url: server+'/menu/app/products',
+            type: "POST",
+            data:{
+                lang: langtag,
+                table: tableid
+            },
+            success: function(data){
+                if (data != '500') {
+                    console.log(data);
+                    vm.cat.catList(data.catlist);
+                    vm.router.GoToProducts();
+                    console.log(vm.cat.catList())
+                }
+            }
+        })
 
 
     });
