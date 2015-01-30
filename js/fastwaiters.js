@@ -75,8 +75,22 @@ $(document).ready(function(){
             vm.lang.selLangTag(this.tag());
         };
     };
-    var Category = function Category(){
+    var Product = function Product(){
         this.catList = ko.observableArray([]);
+        this.prodList = ko.observableArray([]);
+        this.waiter = ko.observable();
+        this.waiterid=ko.observable();
+        this.currency=ko.observable();
+
+        this.selectedCategory = ko.observable();
+
+        this.selectCategory= function(category){
+            $('.catpage').hide(500);
+            $('#sidemenu').hide(500);
+            vm.prod.selectedCategory(category.catid);
+            $('.catpage').show(500);
+        };
+
     };
 
     vm = {
@@ -84,7 +98,7 @@ $(document).ready(function(){
         login: new Auth(),
         tables: new Tables(),
         lang: new Langs(),
-        cat: new Category()
+        prod: new Product()
     };
 
     ko.applyBindings(vm);
@@ -219,10 +233,12 @@ $(document).ready(function(){
             },
             success: function(data){
                 if (data != '500') {
-                    console.log(data);
-                    vm.cat.catList(data.catlist);
+                    vm.prod.catList(data.catlist);
+                    vm.prod.prodList(data.prodlist);
+                    vm.prod.waiter(data.waiter);
+                    vm.prod.waiterid(data.waiterid);
+                    vm.prod.currency(data.currency);
                     vm.router.GoToProducts();
-                    console.log(vm.cat.catList())
                 }
             }
         })
@@ -233,6 +249,17 @@ $(document).ready(function(){
 
     /*
      END Tables section
+     */
+
+    /*
+    Prodpage section
+     */
+    $(main).on('click','#startmenu', function () {
+        $('#sidemenu').show(500);
+    });
+
+    /*
+     END Prodpage section
      */
 
 

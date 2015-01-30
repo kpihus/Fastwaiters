@@ -139,15 +139,50 @@
 
                 <div id="waiter">
                     <div>Teid teenindab</div>
-                    <div class="waitername">Keegi Teine</div>
+                    <div class="waitername" data-bind="text: prod.waiter"></div>
                 </div>
 
                 <div id="catlist">
-                    <ul data-bind="foreach: cat.catList">
-                        <li class="menuitem" data-bind='text: catname, attr: {"data-id":catid}'></li>
+                    <ul data-bind="foreach: prod.catList">
+                        <li class="menuitem" data-bind='text: catname, click: $root.prod.selectCategory'></li>
                     </ul>
                 </div>
+            </div>
 
+            <div class="catpage">
+                <table class="catprods">
+                    <tbody data-bind="foreach: prod.prodList()[prod.selectedCategory()]">
+                    <tr><td>
+                        <table class="itemtable">
+                            <tr>
+                                <td style="width: 188px; height: 125px">
+                                    <div class="imgbox">
+                                        <img height="125" rel="zoom" src="">
+                                    </div>
+                                </td>
+                                <td class="namerow">
+                                    <div class="prodname" data-bind="text: name"></div>
+                                    <div class="proddesc">
+                                        <div class="tggl proddesc">
+                                            <span data-bind="text: description" ></span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="width: 150px"><span class="prodprice custtext" data-bind="text: price + ' ' + vm.prod.currency()"></span></td>
+                                <td class="orderbox">
+                                    <div class="orderbtn custtext">
+                                        <span class="glyphicon glyphicon-plus-sign"></span>
+                                    </div>
+                                </td>
+                                <td class="itemcount">
+                                    <div style="display: none">
+                                        <div class="countnr" data-id="">0</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </tbody>
+                </table>
             </div>
 </script>
 
