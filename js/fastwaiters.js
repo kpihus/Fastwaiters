@@ -16,6 +16,10 @@ $(document).ready(function(){
     var base = $('#base').val();
     var clientcode = $('#clientcode').val();
     var numbtn = $('.numbtn');
+    var goToLogout = 0;
+    var refreshId = setInterval(function () {
+        goToLogout=0;
+    },5000);
     /*
      Knockout vm
      */
@@ -132,7 +136,11 @@ $(document).ready(function(){
     $.getJSON(server+'/menu/app/status', function (data) {
         console.log(data);
         if(data.menuauth){
-            getTables();
+            if(data.tbl>0){
+                getProducts();
+            }else{
+                getTables();
+            }
         }else{
             vm.router.GoToLogin();
         }
@@ -264,8 +272,6 @@ $(document).ready(function(){
                 }
             }
         })
-
-
     });
 
 
@@ -276,6 +282,35 @@ $(document).ready(function(){
     /*
      Prodpage section
      */
+    function getProducts(){
+        $.ajax({
+            url: server+'/menu/app/products',
+            type: "POST",
+            data:{content:'none'},
+            success: function(data){
+                if (data != '500') {
+                    vm.prod.catList(data.catlist);
+                    vm.prod.prodList(data.prodlist);
+                    vm.prod.waiter(data.waiter);
+                    vm.prod.waiterid(data.waiterid);
+                    vm.prod.currency(data.currency);
+                    vm.router.GoToProducts();
+                }
+            }
+        })
+    }
+    $(main).on('click','.waitername', function () {
+        goToLogout++;
+        if(goToLogout>=2){
+            $.getJSON(server+'/menu/app/logout',function(data){
+                if(data=="done"){
+                    goToLogout=0;
+                    vm.tables.tableItems.removeAll();
+                    vm.router.GoToLogin();
+                }
+            })
+        }
+    });
     $(main).on('click','#closemenu', function () {
         $('#sidemenu').hide(300);
     });
