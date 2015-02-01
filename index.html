@@ -36,7 +36,7 @@
     <link href="css/jquery-ui.theme.min.css" rel="stylesheet">
     <link href="css/jquery-ui.structure.min.css" rel="stylesheet">
     <link href="css/jquery.gritter.css" rel="stylesheet">
-    <title>Hello World</title>
+    <title>Fastwaiters</title>
 </head>
 <body>
 
@@ -49,6 +49,21 @@
         <div class="main" data-bind="visible: router.Page()=='Tables', template: {name: 'tablePageTpl'}"></div>
         <div class="main" data-bind="visible: router.Page()=='Products', template: {name: 'prodPageTpl'}"></div>
 
+        <div class="modal fade" id="message" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <div class="modal-body">
+                        <div class="thankmess" id="thanktitle" data-bind="text: router.message()[0]"></div>
+                        <div class="thankmess" id="thankmes1" data-bind="text: router.message()[1]"></div>
+                        <div class="thankmess" id="thankmes2" data-bind="text: router.message()[2]"></div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="closeModal"><button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove-circle"></span></button></div>
+        </div>
 
         <!--Templates-->
         <script type="text/html" id="loginPageTpl">
@@ -133,7 +148,7 @@
                 </div>
 
             </div>
-<!--SIDEMENU-->
+            <!--SIDEMENU-->
             <div id="sidemenu">
                 <div id="closemenu">
                     <span class="glyphicon glyphicon-remove"></span>
@@ -161,13 +176,13 @@
                     <tr><td>
                         <table class="itemtable">
                             <tr>
-                            <!-- ko if: picurl -->
+                                <!-- ko if: picurl -->
                                 <td style="width: 188px; height: 125px">
                                     <div class="imgbox">
                                         <img height="125" rel="zoom" data-bind="attr: { src: $root.router.base() +'/'+ picurl }">
                                     </div>
                                 </td>
-                            <!-- /ko -->
+                                <!-- /ko -->
                                 <td class="namerow">
                                     <div class="prodname" data-bind="text: name"></div>
                                     <div class="proddesc">
@@ -214,11 +229,7 @@
 
                         </tbody>
                     </table>
-
-
-
                 </div>
-
                 <div id="totalsum">
                     <span id="sumtext">SUMMA: </span>
                     <span id="sumam" class="totprice" data-bind="text: vm.prod.orderPrice"></span><span class="totprice" data-bind="text: prod.currency"></span>
@@ -231,30 +242,59 @@
                     <button id="conforder" type="button" class="fwbtn">TELLI</button>
                 </div>
                 <div id="ajload">
-
                 </div>
-
-
             </div>
+            <!--END ORDERVIEW -->
+            <!--INVOICE VIEW-->
+            <div class="invoice" id="invoice" style="display: none">
+                <div id="closeinv"><span class="glyphicon glyphicon-remove"></span></div>
+                <div id="invhead">ARVE</div>
 
-            <div class="modal fade" id="orderthank" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-
-                        <div class="modal-body">
-                            <div class="thankmess" id="thanktitle">Täname!</div>
-                            <div class="thankmess" id="thankmes1">Teie tellimus on teenindajale edastatud.</div>
-                            <div class="thankmess" id="thankmes2">Kui soovite tellida juurde siis valige toode ning kinnitage tellimus.</div>
-                        </div>
-
+                <div id="invcontent">
+                    <table id="invitems" class="ordertable" data-bind="foreach: prod.orderList">
+                        <thead>
+                        <tr>
+                            <td colspan="4" class="ordName"><span>TELLIMUS:</span><span data-bind="text: id"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="text-align: left">SELGITUS</td>
+                            <td>KOGUS</td>
+                            <td style="white-space: nowrap">ÜHIKU HIND</td>
+                            <td>KOKKU</td>
+                        </tr>
+                        </thead>
+                        <tbody data-bind="foreach: prod">
+                        <tr>
+                            <td class="invprodname" data-bind="text: name"></td>
+                            <td data-bind="text: amount"></td>
+                            <td data-bind="text: uprice + ' ' + $root.prod.currency()"></td>
+                            <td data-bind="text: rtotal + ' ' + $root.prod.currency()"></td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr id="sumtot">
+                            <td>KOKKU:<span data-bind="text: ototal + ' ' + $root.prod.currency()"></span></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div id="paymentbox">
+                    <div>Kuidas soovite tasuda</div>
+                    <div>
+                        <button id="paycard" class="fwbtn paybtn">KAARDIGA</button>
+                        <button id="paycash" class="fwbtn paybtn">SULARAHAS</button>
                     </div>
                 </div>
-
-                <div id="closeModal"><button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove-circle"></span></button></div>
             </div>
-
-            <!--END ORDERVIEW -->
-</script>
+            <!--END INVOICE VIEW-->
+            <!--PAYMENT RESULT BOX-->
+            <div id="payresult" class="invoice" style="display: none">
+                <div id="payres1">Täname!</div>
+                <div id="payres2">Valisite makseviisiks <span id="paytype" style="color: #b8300c"></span></div>
+                <div id="payres3">Kohe saabub teenindaja</div>
+            </div>
+            <!--END PAYMENT RESULT BOX-->
+        </script>
 
 
 

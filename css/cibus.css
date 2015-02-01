@@ -199,10 +199,9 @@ body{
 .catpage{
     background-color: #f6f6f6;
     left: 0;
-    max-height: 1150px;
+    /*max-height: 1150px;*/
     overflow: auto;
-    padding-bottom: 20px;
-    position: fixed;
+    position: relative;
     top: 63px;
     width: 100%;
 }
@@ -441,7 +440,8 @@ font-size: 35px;
     color: #191919;
 }
 .ordName{
-font-size: 26px;
+    font-size: 26px;
+    text-align: left;
 }
 #closeinv{
     font-size: 27px;

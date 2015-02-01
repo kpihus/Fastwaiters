@@ -22,8 +22,11 @@ $(document).ready(function(){
     },5000);
 
     //Translations
-    var g_messSent = "Sõnum on saadetud";
+    var g_messSent = "Teade on saadetud";
     var g_waiterComing = "Teenindaja saabub peatselt";
+    var g_payCard='kaardimakse';
+    var g_payCash='sularaha';
+
     /*
      Knockout vm
      */
@@ -32,6 +35,10 @@ $(document).ready(function(){
         this.Page = ko.observable(currentPAge);
         this.server = ko.observable();
         this.base = ko.observable();
+        this.sessid = ko.observable();
+
+        this.message = ko.observableArray();
+
 
         this.GoToLogin = function () {
             this.Page('Login');
@@ -86,6 +93,7 @@ $(document).ready(function(){
     var Product = function Product(){
         this.catList = ko.observableArray([]);
         this.prodList = ko.observableArray([]);
+        this.orderList = ko.observableArray([]);
         this.pendingOrder = ko.observableArray([]);
         this.waiter = ko.observable();
         this.waiterid=ko.observable();
@@ -139,15 +147,30 @@ $(document).ready(function(){
      */
     $.getJSON(server+'/menu/app/status', function (data) {
         console.log(data);
-        if(data.menuauth){
-            if(data.tbl>0){
-                getProducts();
-            }else{
-                getTables();
-            }
+        if(data.state != 'OK'){
+            vm.router.message.push('Vabandust');
+            vm.router.message.push('Serveriga ei ole võimalik suhelda');
+            vm.router.message.push('Palun kontrolli internetiühendust');
+            $('#message').modal('show');
         }else{
-            vm.router.GoToLogin();
+            vm.router.sessid(data.sessid);
+            if(data.sessid >0){
+                getOpenOrders();
+            }
+            if(data.menuauth){
+                if(data.tbl>0){
+                    getProducts();
+                }else{
+                    getTables();
+                }
+            }else{
+                vm.router.GoToLogin();
+            }
         }
+    });
+
+    $('#message').on('hidden.bs.modal', function () {
+        vm.router.message.removeAll();
     });
 
     /*
@@ -202,6 +225,7 @@ $(document).ready(function(){
                     $('.pinalert').slideDown(200);
                     vm.pincode('');
                 }else{
+                    vm.router.sessid(data.sessid);
                     renderTables(data.tables);
                     renderLanguages(data);
                 }
@@ -257,7 +281,6 @@ $(document).ready(function(){
         var langtag = vm.lang.selLangTag();
         var tableid = $(this).data('id');
 
-        console.log(langtag+' '+tableid);
         $.ajax({
             url: server+'/menu/app/products',
             type: "POST",
@@ -336,7 +359,7 @@ $(document).ready(function(){
             $(this).effect('highlight');
             makeOrder();
         } else {
-           $('#totalsum').effect('highlight',500);
+            $('#totalsum').effect('highlight',500);
         }
     });
     $(main).on('click','#callservice', function () {
@@ -344,10 +367,20 @@ $(document).ready(function(){
         $(this).effect('highlight');
         send_message(1);
     });
+    $(main).on('click','#invopen', function () {
+        getOpenOrders();
+        $(this).effect('highlight');
+        $('#sidemenu').hide(300);
+        $('#ordermenu').hide(300);
+        $('#invoice').show('blind');
+    });
+    $(main).on('click','#closeinv', function () {
+        $('#invoice').hide('blind');
+
+    });
 
     function makeOrder(){
         var items = ko.mapping.toJS(vm.prod.pendingOrder());
-        console.log(items);
         var list = [];
         var orderlist = [];
         //Extract product id's (thats all what we need)
@@ -372,11 +405,14 @@ $(document).ready(function(){
                 notes: vm.prod.orderNotes()
             },
             success: function(data){
-                console.log(data);
                 if(data=='200'){
                     $('#ordermenu').hide(300);
                     vm.prod.pendingOrder.removeAll();
-                    $('#orderthank').modal('show');
+                    vm.router.message.push('Täname');
+                    vm.router.message.push('Teie tellimus on teenindajale edastatud.');
+                    vm.router.message.push('Kui soovite tellida juurde siis valige toode ning kinnitage tellimus.');
+                    $('#message').modal('show');
+                    getOpenOrders();
                 }
             }
         })
@@ -417,18 +453,40 @@ $(document).ready(function(){
             },  // type hardcoded, replace with variable for multiple options
             success: function(){
                 if(type==1){
-                    $.gritter.add({
-                        title: g_messSent,
-                        text: g_waiterComing
-                    });
+                    vm.router.message.push(g_messSent);
+                    vm.router.message.push(g_waiterComing);
+                    $('#message').modal('show');
                 }
                 $('#callservice').css('color','#fff');
             }
         });
     }
+    function getOpenOrders(){
+        $.ajax({
+            url: server+'/menu/app/orders',
+            type: "POST",
+            data:{
+                sessid: vm.router.sessid()
+            },
+            success: function (data) {
+                console.log(data);
+                vm.prod.orderList(data);
+            }
+        })
+    }
 
-
-
+    $('#paycard').click(function(){
+        send_message(3);
+        $('#paytype').text(g_payCard);
+        $('#invoice').hide();
+        $('#payresult').show();
+    });
+    $('#paycash').click(function(){
+        send_message(2);
+        $('#paytype').text(g_payCash);
+        $('#invoice').hide();
+        $('#payresult').show();
+    });
 
     /*
      END Prodpage section
