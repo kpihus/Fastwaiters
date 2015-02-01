@@ -20,6 +20,10 @@ $(document).ready(function(){
     var refreshId = setInterval(function () {
         goToLogout=0;
     },5000);
+
+    //Translations
+    var g_messSent = "Sõnum on saadetud";
+    var g_waiterComing = "Teenindaja saabub peatselt";
     /*
      Knockout vm
      */
@@ -335,6 +339,12 @@ $(document).ready(function(){
            $('#totalsum').effect('highlight',500);
         }
     });
+    $(main).on('click','#callservice', function () {
+        $('#callservice').css('color','#f4ff77');
+        $(this).effect('highlight');
+        send_message(1);
+    });
+
     function makeOrder(){
         var items = ko.mapping.toJS(vm.prod.pendingOrder());
         console.log(items);
@@ -394,6 +404,30 @@ $(document).ready(function(){
         });
         return count;
     }
+
+    function send_message(type, order) {
+        $.ajax({
+            url: server+'/menu/app/message',
+            type: "POST",
+            cache: false,
+            data: {
+                MessageType: type,
+                Order: order,
+                waiter: vm.prod.waiterid()
+            },  // type hardcoded, replace with variable for multiple options
+            success: function(){
+                if(type==1){
+                    $.gritter.add({
+                        title: g_messSent,
+                        text: g_waiterComing
+                    });
+                }
+                $('#callservice').css('color','#fff');
+            }
+        });
+    }
+
+
 
 
     /*
