@@ -329,6 +329,7 @@ $(document).ready(function(){
     });
     $(main).on('click','#conforder', function () {
         if (vm.prod.pendingOrder().length>0) {
+            $(this).effect('highlight');
             makeOrder();
         } else {
            $('#totalsum').effect('highlight',500);
@@ -337,8 +338,62 @@ $(document).ready(function(){
     function makeOrder(){
         var items = ko.mapping.toJS(vm.prod.pendingOrder());
         console.log(items);
+        var list = [];
+        var orderlist = [];
+        //Extract product id's (thats all what we need)
+        ko.utils.arrayForEach(vm.prod.pendingOrder(), function (item) {
+            list.push(item.id);
+        });
+
+        //Make list unique (remove dublicate items
+        var uniqlist = list.unique();
+
+        //Loop over list with all id's and count them
+        $.each(uniqlist,function(key,value){
+            var pqty=countItems(list,value);
+            orderlist.push({'id':value, 'qty':pqty});
+        });
+
+        $.ajax({
+            url: server+'/menu/app/saveorder',
+            type: 'POST',
+            data: {
+                products: orderlist,
+                notes: vm.prod.orderNotes()
+            },
+            success: function(data){
+                console.log(data);
+                if(data=='200'){
+                    $('#ordermenu').hide(300);
+                    vm.prod.pendingOrder.removeAll();
+                    $('#orderthank').modal('show');
+                }
+            }
+        })
     }
 
+    Array.prototype.unique = function() {
+        var arr = [];
+        for(var i = 0; i < this.length; i++) {
+            if(!arr.contains(this[i])) {
+                arr.push(this[i]);
+            }
+        }
+        return arr;
+    };
+    Array.prototype.contains = function(v) {
+        for(var i = 0; i < this.length; i++) {
+            if(this[i] === v) return true;
+        }
+        return false;
+    };
+    function countItems(arr,item){
+        var count=0;
+        $.each(arr,function(key,value){
+            if(value==item){count++}
+        });
+        return count;
+    }
 
 
     /*

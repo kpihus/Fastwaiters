@@ -42,7 +42,7 @@
 <div class="app">
     <input type="hidden" id="server" value="http://localhost/menyy/web/app_dev.php">
     <input type="hidden" id="base" value="http://localhost/menyy/web">
-    <input type="hidden" id="clientcode" value="11984577">
+    <input type="hidden" id="clientcode" value="1412236260">
     <div class="all">
         <div class="main" data-bind="visible: router.Page()=='Login', template: {name: 'loginPageTpl'}"></div>
         <div class="main" data-bind="visible: router.Page()=='Tables', template: {name: 'tablePageTpl'}"></div>
@@ -234,6 +234,22 @@
                 </div>
 
 
+            </div>
+
+            <div class="modal fade" id="orderthank" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <div class="modal-body">
+                            <div class="thankmess" id="thanktitle">Täname!</div>
+                            <div class="thankmess" id="thankmes1">Teie tellimus on teenindajale edastatud.</div>
+                            <div class="thankmess" id="thankmes2">Kui soovite tellida juurde siis valige toode ning kinnitage tellimus.</div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="closeModal"><button type="button" class="close" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-remove-circle"></span></button></div>
             </div>
 
             <!--END ORDERVIEW -->
