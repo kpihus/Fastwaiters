@@ -5,7 +5,16 @@
 window.addEventListener('load', function() {
     FastClick.attach(document.body);
 }, false);
+$(function() {
+    function showSpinner() {
+        $('#ajaxload').show();
+    }
+    function hideSpinner() {
+        $('#ajaxload').hide();
+    }
 
+    $(document).ajaxStart(showSpinner).ajaxStop(hideSpinner);
+});
 
 $(document).ready(function(){
     /*
@@ -26,6 +35,9 @@ $(document).ready(function(){
     var g_waiterComing = "Teenindaja saabub peatselt";
     var g_payCard='kaardimakse';
     var g_payCash='sularaha';
+
+
+
 
     /*
      Knockout vm
@@ -145,7 +157,7 @@ $(document).ready(function(){
     /*
      Preflight check
      */
-    $.getJSON(server+'/menu/app/status', function (data) {
+    $.getJSON(server+'/menu/app/status',{sessid: localStorage.getItem('sessid')}, function (data) {
         console.log(data);
         if(data.state != 'OK'){
             vm.router.message.push('Vabandust');
@@ -154,10 +166,11 @@ $(document).ready(function(){
             $('#message').modal('show');
         }else{
             vm.router.sessid(data.sessid);
-            if(data.sessid >0){
-                getOpenOrders();
-            }
+
             if(data.menuauth){
+                if(data.sessid >0){
+                    getOpenOrders();
+                }
                 if(data.tbl>0){
                     getProducts();
                 }else{
@@ -168,7 +181,7 @@ $(document).ready(function(){
             }
         }
     });
-
+    //Empty messages array on modal close
     $('#message').on('hidden.bs.modal', function () {
         vm.router.message.removeAll();
     });
@@ -226,6 +239,7 @@ $(document).ready(function(){
                     vm.pincode('');
                 }else{
                     vm.router.sessid(data.sessid);
+                    localStorage.setItem('sessid',data.sessid);
                     renderTables(data.tables);
                     renderLanguages(data);
                 }
@@ -246,7 +260,7 @@ $(document).ready(function(){
             url: server+'/menu/app/tables',
             type: 'POST',
             data: {
-                client: clientcode
+                sessid: vm.router.sessid()
             },
             success: function(data){
                 renderTables(data.tables);
@@ -285,6 +299,7 @@ $(document).ready(function(){
             url: server+'/menu/app/products',
             type: "POST",
             data:{
+                sessid: vm.router.sessid(),
                 lang: langtag,
                 table: tableid
             },
@@ -313,7 +328,9 @@ $(document).ready(function(){
         $.ajax({
             url: server+'/menu/app/products',
             type: "POST",
-            data:{content:'none'},
+            data:{
+                sessid:vm.router.sessid()
+            },
             success: function(data){
                 if (data != '500') {
                     vm.prod.catList(data.catlist);
@@ -329,31 +346,39 @@ $(document).ready(function(){
     $(main).on('click','.waitername', function () {
         goToLogout++;
         if(goToLogout>=2){
-            $.getJSON(server+'/menu/app/logout',function(data){
+            $.getJSON(server+'/menu/app/logout',{sessid: vm.router.sessid()},function(data){
                 if(data=="done"){
                     goToLogout=0;
+                    vm.router.sessid(null);
                     vm.tables.tableItems.removeAll();
+                    localStorage.removeItem('sessid');
                     vm.router.GoToLogin();
                 }
             })
         }
     });
+    //Close categories menu
     $(main).on('click','#closemenu', function () {
         $('#sidemenu').hide(300);
     });
+    //Open categories menubar
     $(main).on('click','#startmenu', function () {
         $('#sidemenu').show(300);
     });
+    //Open pending order view
     $(main).on('click','#orderopen', function () {
         $('#ordermenu').show(300);
     });
+    //Close pending order view
     $(main).on('click','#closeorder', function () {
         $('#ordermenu').hide(300);
     });
+    //Make a fly effect for product + button
     $(main).on('click','.orderbox', function () {
         $(this).closest('tr').effect("transfer",{ to: $("#prodcount") }, 500);
         $('#orderopen').effect('highlight');
     });
+    //To confirm order
     $(main).on('click','#conforder', function () {
         if (vm.prod.pendingOrder().length>0) {
             $(this).effect('highlight');
@@ -362,11 +387,13 @@ $(document).ready(function(){
             $('#totalsum').effect('highlight',500);
         }
     });
+    //Call waitress
     $(main).on('click','#callservice', function () {
         $('#callservice').css('color','#f4ff77');
         $(this).effect('highlight');
         send_message(1);
     });
+    //Open invoice view
     $(main).on('click','#invopen', function () {
         getOpenOrders();
         $(this).effect('highlight');
@@ -374,6 +401,7 @@ $(document).ready(function(){
         $('#ordermenu').hide(300);
         $('#invoice').show('blind');
     });
+    //Close invoice view
     $(main).on('click','#closeinv', function () {
         $('#invoice').hide('blind');
 
@@ -396,15 +424,18 @@ $(document).ready(function(){
             var pqty=countItems(list,value);
             orderlist.push({'id':value, 'qty':pqty});
         });
-
+        var data={
+            products: orderlist,
+            notes: vm.prod.orderNotes(),
+            sessid: vm.router.sessid()
+        };
+        alert(data);
         $.ajax({
             url: server+'/menu/app/saveorder',
             type: 'POST',
-            data: {
-                products: orderlist,
-                notes: vm.prod.orderNotes()
-            },
+            data: data,
             success: function(data){
+                alert(data);
                 if(data=='200'){
                     $('#ordermenu').hide(300);
                     vm.prod.pendingOrder.removeAll();
@@ -447,6 +478,7 @@ $(document).ready(function(){
             type: "POST",
             cache: false,
             data: {
+                sessid: vm.router.sessid(),
                 MessageType: type,
                 Order: order,
                 waiter: vm.prod.waiterid()
@@ -476,12 +508,14 @@ $(document).ready(function(){
     }
 
     $('#paycard').click(function(){
+        $(this).effect('highlight');
         send_message(3);
         $('#paytype').text(g_payCard);
         $('#invoice').hide();
         $('#payresult').show();
     });
     $('#paycash').click(function(){
+        $(this).effect('highlight');
         send_message(2);
         $('#paytype').text(g_payCash);
         $('#invoice').hide();

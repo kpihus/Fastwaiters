@@ -95,12 +95,27 @@ body{
 
 
 #menubtn{
-    background-image: url('../img/menubtn.png');
+     background-image: url('../img/menubtn.png');
+     background-repeat: no-repeat;
+     background-position: center center;
+     height: 63px;
+     width: 72px;
+     float: left;
+ }
+#ajaxload{
     background-repeat: no-repeat;
     background-position: center center;
     height: 63px;
     width: 72px;
     float: left;
+    top: -69px;
+    left: -138px;
+    position: relative;
+    z-index: 1000;
+}
+.ajaximg{
+    width: 200px;
+    height: 200px;
 }
 #sidemenu{
     width: 308px;

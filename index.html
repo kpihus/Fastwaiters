@@ -41,9 +41,9 @@
 <body>
 
 <div class="app">
-    <input type="hidden" id="server" value="http://localhost/menyy/web/app_dev.php">
-    <input type="hidden" id="base" value="http://localhost/menyy/web">
-    <input type="hidden" id="clientcode" value="1412236260">
+    <input type="hidden" id="server" value="http://www.itegard.ee/cibus/web">
+    <input type="hidden" id="base" value="http://www.itegard.ee/cibus/web/">
+    <input type="hidden" id="clientcode" value="11984577">
     <div class="all">
         <div class="main" data-bind="visible: router.Page()=='Login', template: {name: 'loginPageTpl'}"></div>
         <div class="main" data-bind="visible: router.Page()=='Tables', template: {name: 'tablePageTpl'}"></div>
@@ -135,6 +135,9 @@
             <div id="headrow" class="custcolor">
                 <div id="startmenu">
                     <div id="menubtn"></div>
+                    <div id="ajaxload" style="display: none">
+                        <img class="ajaximg" src="img/loading.gif">
+                    </div>
                     <div id="hcatname" data-bind="text: prod.selectedCatname"></div>
                 </div>
                 <div id="rightbtn">
@@ -273,7 +276,7 @@
                         </tbody>
                         <tfoot>
                         <tr id="sumtot">
-                            <td>KOKKU:<span data-bind="text: ototal + ' ' + $root.prod.currency()"></span></td>
+                            <td colspan="4">KOKKU: <span data-bind="text: ototal + ' ' + $root.prod.currency()"></span></td>
                         </tr>
                         </tfoot>
                     </table>
