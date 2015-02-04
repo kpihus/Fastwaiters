@@ -41,9 +41,8 @@
 <body>
 
 <div class="app">
-    <input type="hidden" id="server" value="http://www.itegard.ee/cibus/web">
-    <input type="hidden" id="base" value="http://www.itegard.ee/cibus/web/">
-    <input type="hidden" id="clientcode" value="11984577">
+    <!--<input type="hidden" id="server" value="http://www.itegard.ee/cibus/web">-->
+    <!--<input type="hidden" id="clientcode" value="11984577">-->
     <div class="all">
         <div class="main" data-bind="visible: router.Page()=='Login', template: {name: 'loginPageTpl'}"></div>
         <div class="main" data-bind="visible: router.Page()=='Tables', template: {name: 'tablePageTpl'}"></div>
@@ -103,9 +102,53 @@
                         <td><button type="button" data-nr="0" class="numbtn">0</button></td>
                         <td><button type="button" class="entbtn"><span class="glyphicon glyphicon-ok"></span></button></td>
                     </tr>
+                    <tr>
+                        <td></td>
+                        <td><button type="button"  data-toggle="modal" data-target="#settings"><span class="glyphicon glyphicon-cog"></span></button></td>
+                        <td></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
+
+
+            <div class="modal fade" id="settings" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Settings</h4>
+                        </div>
+                        <div class="modal-body">
+
+                            <form class="form-horizontal">
+                                <div class="form-group form-group-lg">
+                                    <div class="col-sm-10">
+                                        <input id="setserveraadr" placeholder="Server address" class="form-control" data-bind="value: router.server, valueUpdate: 'afterkeydown'" name="server" type="text">
+                                    </div>
+                                </div>
+                                <div class="form-group form-group-lg">
+                                    <div class="col-sm-10">
+                                        <input id="setclientcode" placeholder="Client code" class="form-control" data-bind="value: router.clientcode, valueUpdate: 'afterkeydown'" name="code" type="text">
+                                    </div>
+                                </div>
+                            </form>
+
+
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default btn-lg" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary btn-lg" data-bind="click: router.savesettings" data-dismiss="modal">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+
         </script>
         <script type="text/html" id="tablePageTpl">
             <div id="table_div">
@@ -157,7 +200,7 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 </div>
                 <div class="cLogo">
-                    <img src="">
+                    <img height="125" rel="zoom" data-bind="attr: { src: $root.router.server() +'/'+ $root.router.companyLogo() }">
                 </div>
 
                 <div id="waiter">
@@ -182,7 +225,7 @@
                                 <!-- ko if: picurl -->
                                 <td style="width: 188px; height: 125px">
                                     <div class="imgbox">
-                                        <img height="125" rel="zoom" data-bind="attr: { src: $root.router.base() +'/'+ picurl }">
+                                        <img height="125" rel="zoom" data-bind="attr: { src: $root.router.server() +'/'+ picurl }">
                                     </div>
                                 </td>
                                 <!-- /ko -->
@@ -253,11 +296,14 @@
                 <div id="closeinv"><span class="glyphicon glyphicon-remove"></span></div>
                 <div id="invhead">ARVE</div>
 
-                <div id="invcontent">
-                    <table id="invitems" class="ordertable" data-bind="foreach: prod.orderList">
+                <div class="invcontent"  data-bind="foreach: prod.orderList">
+                    <table id="invitems" class="ordertable">
                         <thead>
                         <tr>
-                            <td colspan="4" class="ordName"><span>TELLIMUS:</span><span data-bind="text: id"></span></td>
+                            <td colspan="4" class="ordName"><span>TELLIMUS:</span><span data-bind="text: id"></span>
+                                <button id="sPayCash" class="sPay redbtn" data-method="cash" data-bind='attr:{"data-id" : id}'></button>
+                                <button id="sPayCard" class="sPay redbtn" data-method="card" data-bind='attr:{"data-id" : id}'></button>
+                            </td>
                         </tr>
                         <tr>
                             <td style="text-align: left">SELGITUS</td>
@@ -298,12 +344,7 @@
             </div>
             <!--END PAYMENT RESULT BOX-->
         </script>
-
-
-
     </div>
-
-
 </div>
 <script src="js/jquery-2.1.1.min.js"></script>
 <script src="js/jquery-ui.min.js"></script>
@@ -314,7 +355,8 @@
 <script src="js/bootstrap.min.js"></script>
 <script src="js/fastwaiters.js"></script>
 <script src="js/fastclick.js"></script>
-<script type="text/javascript" src="cordova.js"></script>
+<script src="js/jed.js"></script>
+<!--<script type="text/javascript" src="js/cordova.js"></script>-->
 <script type="text/javascript" src="js/index.js"></script>
 <script type="text/javascript">
     app.initialize();

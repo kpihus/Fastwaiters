@@ -215,7 +215,7 @@ body{
     background-color: #f6f6f6;
     left: 0;
     /*max-height: 1150px;*/
-    overflow: auto;
+    /*overflow: auto;*/
     position: relative;
     top: 63px;
     width: 100%;
@@ -472,7 +472,7 @@ font-size: 35px;
     margin-left: auto;
     text-align: center;
 }
-#invcontent{
+.invcontent{
     width: 715px;
     min-height: 100px;
     max-height: 580px;
