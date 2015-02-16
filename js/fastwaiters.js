@@ -167,6 +167,7 @@ $(document).ready(function(){
         this.prodList = ko.observableArray([]);
         this.orderList = ko.observableArray([]);
         this.pendingOrder = ko.observableArray([]);
+        this.counter = ko.observableArray([]);
         this.waiter = ko.observable();
         this.waiterid=ko.observable();
         this.currency=ko.observable();
@@ -204,7 +205,17 @@ $(document).ready(function(){
                 grandtotal=grandtotal+parseFloat(item.price());
             });
             return grandtotal.toFixed(2);
-        },this)
+        },this);
+        this.getProdCount = function(id){
+
+            var count = 0;
+            ko.utils.arrayForEach(vm.prod.pendingOrder(), function(item){
+                if(id===item.id()){
+                    count = count+1;
+                }
+            });
+            return count;
+        };
         this.bigImage = function () {
             vm.prod.bigSrc(this.picurl);
             $('#bigimage').modal('show');

@@ -225,6 +225,7 @@ background-color: #fff;
 }
 .catprods{
     margin-bottom: 40px;
+    width: 100%;
 }
 
 
@@ -242,7 +243,7 @@ background-color: #fff;
 }
 .itemtable{
     margin: 13px;
-    width: 764px;
+    width: 99%;
 }
 .proddesc{
     font-family: "Gotham-Book",Arial,Helvetica,sans-serif;
