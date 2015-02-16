@@ -224,8 +224,8 @@
                             <tr>
                                 <!-- ko if: picurl -->
                                 <td style="width: 188px; height: 125px">
-                                    <div class="imgbox">
-                                        <img height="125" rel="zoom" data-bind="attr: { src: $root.router.server() +'/'+ picurl }">
+                                    <div class="imgbox" data-bind="click: $root.prod.bigImage">
+                                            <img height="125" class="prodimg" data-bind="attr: { src: $root.router.server() +'/'+ picurl }">
                                     </div>
                                 </td>
                                 <!-- /ko -->
@@ -253,6 +253,21 @@
                     </tbody>
                 </table>
             </div>
+
+            <!--BIG IMAGE-->
+
+            <div class="modal fade" id="bigimage" tabindex="-1" role="dialog" aria-labelledby="bigImageLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <img style="width: 100%" data-bind="attr: { src: $root.router.server() +'/'+ $root.prod.bigSrc() }">
+                    </div>
+                </div>
+                <div style="text-align: center" data-dismiss="modal"><span class="glyphicon glyphicon-remove-circle" style="color: #cbcbcb; font-size: 40px"></span></div>
+            </div>
+
+            <!--END BIG IMAGE-->
+
+
             <!--END CATPAGE -->
             <!--ORDER VIEW -->
             <div id="ordermenu" style="display: none">
