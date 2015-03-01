@@ -35,10 +35,11 @@ $(document).ready(function(){
     },5000);
 
     //Translations
-    var g_messSent = "Teade on saadetud";
-    var g_waiterComing = "Teenindaja saabub peatselt";
-    var g_payCard='kaardimakse';
-    var g_payCash='sularaha';
+    var g_messSent;
+    var g_waiterComing;
+    var g_payCard;
+    var g_payCash;
+
 
 
 
@@ -46,17 +47,7 @@ $(document).ready(function(){
     /*
      Knockout vm
      */
-    var data = {
-        "locale_data": {
-            "messages": {
-                "": {"lang": "et"
-                }
-            }
-        }
-    };
 
-
-        var i18n = new Jed(data);
 
     ko.bindingHandlers.translate = {
         init: function(element, valueAccessor) {
@@ -147,6 +138,7 @@ $(document).ready(function(){
         this.langItems  = ko.observableArray([]);
         this.selLang = ko.observable();
         this.selLangTag = ko.observable();
+        this.trans = ko.observableArray([]);
         this.setLanguage = function(){
             vm.lang.selLang(this.name());
             vm.lang.selLangTag(this.tag());
@@ -238,11 +230,8 @@ $(document).ready(function(){
 
     server = vm.router.server();
     clientcode = vm.router.clientcode();
+    getTranslations('en');
 
-
-    /*
-    Get Translations
-     */
 
 
     /*
@@ -250,7 +239,6 @@ $(document).ready(function(){
      */
     $.getJSON(server+'/menu/app/status',{sessid: localStorage.getItem('sessid'),company:clientcode})
         .success(function (data) {
-            console.log(data);
             if(data.state != 'OK'){
                 vm.router.message.push('Vabandust');
                 vm.router.message.push('Serveriga ei ole võimalik suhelda');
@@ -260,7 +248,7 @@ $(document).ready(function(){
                 vm.router.sessid(data.sessid);
                 vm.lang.selLangTag(data.lang);
                 vm.router.companyLogo(data.logo);
-                //getTranslations();
+                getTranslations(vm.lang.selLangTag());
                 if(data.menuauth){
                     if(data.sessid >0){
                         getOpenOrders();
@@ -282,10 +270,13 @@ $(document).ready(function(){
             vm.router.GoToLogin();
         });
 
-    function getTranslations(){
-        $.getJSON(server+'/menu/app/translations',{lang:vm.lang.selLangTag},function(data){
-            i18n = new Jed(data);
-            ko.applyBindings(vm);
+    function getTranslations(lang){
+        $.getJSON(server+'/menu/app/translations',{lang:lang},function(data){
+            vm.lang.trans(data);
+            g_messSent = vm.lang.trans()['MESSAGE_SENT'];
+            g_waiterComing = vm.lang.trans()['WAITER_ON_THE_WAY'];
+            g_payCard=vm.lang.trans()['WITH_CARD'];
+            g_payCash=vm.lang.trans()['IN_CASH'];
         })
     }
     //Empty messages array on modal close
@@ -300,7 +291,6 @@ $(document).ready(function(){
     var pinfield = $(main).find('.pinfiled');
     var flag = false;
     //Add pin code
-    //$(main).on('click','.numbtn',function(){
     $('.numbtn').bind('touchstart click',function(){
         //$(numbtn).bind('touchstart',function () {
         var pinfield = $(main).find('.pinform').find('.pinfiled');
@@ -352,9 +342,9 @@ $(document).ready(function(){
                 }
             },
             error: function(data){
-                vm.router.message.push('Viga!');
-                vm.router.message.push('Ühendus serveriga ebaõnnestus');
-                vm.router.message.push('Palun kontrolli seadistusi');
+                vm.router.message.push(vm.lang.trans()['ERROR']);
+                vm.router.message.push(vm.lang.trans()['CANT_CONNECT']);
+                vm.router.message.push(vm.lang.trans()['CHECK_SETTINGS']);
                 $('#message').modal('show');
                 vm.router.GoToLogin();
             }
@@ -397,6 +387,7 @@ $(document).ready(function(){
     function renderLanguages(data){
         vm.lang.selLang(data.deflang);
         vm.lang.selLangTag(data.deflangtag);
+        vm.lang.langItems.removeAll();
         $.each(data.langs, function (index, value) {
             vm.lang.langItems.push(new LangItem({
                 tag: value.tag,
@@ -421,6 +412,7 @@ $(document).ready(function(){
             },
             success: function(data){
                 if (data != '500') {
+                    getTranslations(vm.lang.selLangTag());
                     vm.prod.catList(data.catlist);
                     vm.prod.prodList(data.prodlist);
                     vm.prod.waiter(data.waiter);
@@ -560,9 +552,9 @@ $(document).ready(function(){
                     $('#ordermenu').hide(300);
                     vm.prod.orderNotes(null);
                     vm.prod.pendingOrder.removeAll();
-                    vm.router.message.push('Täname');
-                    vm.router.message.push('Teie tellimus on teenindajale edastatud.');
-                    vm.router.message.push('Kui soovite tellida juurde siis valige toode ning kinnitage tellimus.');
+                    vm.router.message.push(vm.lang.trans()['THANKYOU']);
+                    vm.router.message.push(vm.lang.trans()['YOUR_ORDER_IS_FORWARDED']);
+                    vm.router.message.push(vm.lang.trans()['IF_YOU_NEED_SOMETHING_ELSE']);
                     $('#message').modal('show');
                     getOpenOrders();
                 }
@@ -622,7 +614,6 @@ $(document).ready(function(){
                 sessid: vm.router.sessid()
             },
             success: function (data) {
-                console.log(data);
                 vm.prod.orderList(data);
             }
         })
@@ -665,10 +656,6 @@ $(document).ready(function(){
 
     });
 
-    //$(main).on('click','.prodimg', function () {
-    //    console.log('Go big');
-    //    $('#bigimage').modal('show');
-    //});
 
     /*
      END Prodpage section

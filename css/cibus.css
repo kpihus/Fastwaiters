@@ -147,7 +147,7 @@ body{
     font-size: 27px;
     padding: 17px;
     font-family: "Gotham-Medium",Arial,Helvetica,sans-serif;
-
+    text-transform: uppercase;
 
 }
 
@@ -311,12 +311,14 @@ background-color: #fff;
 }
 #invopen{
     float: left;
+    text-transform: uppercase;
 }
 #callservice{
     float: left;
+    text-transform: uppercase;
 }
 #orderopen{
-
+    text-transform: uppercase;
     float: right;
 
 }
@@ -324,6 +326,7 @@ background-color: #fff;
     margin-left: 90px;
     margin-right: 10px;
     margin-top: 15px;
+    text-transform: uppercase;
 }
 #notesbox label{
     font-family: "Gotham-Medium",Arial,Helvetica,sans-serif;
@@ -388,6 +391,10 @@ font-size: 35px;
     font-family: "Gotham-Medium",Arial,Helvetica,sans-serif;
     font-size: 25px;
     color: #fff;
+    text-transform: uppercase;
+}
+#sumtext::after{
+    content: ":";
 }
 
 .totprice{
@@ -398,6 +405,7 @@ font-size: 35px;
 #conforder{
     margin-top: 30px;
     width: 188px;
+    text-transform: uppercase;
 }
 .fwbtn{
     height: 60px;
@@ -458,6 +466,7 @@ font-size: 35px;
 .ordName{
     font-size: 26px;
     text-align: left;
+    text-transform: uppercase;
 }
 #closeinv{
     font-size: 27px;
@@ -472,6 +481,7 @@ font-size: 35px;
     margin-right: auto;
     margin-left: auto;
     text-align: center;
+    text-transform: uppercase;
 }
 .invcontent{
     width: 715px;
@@ -510,7 +520,7 @@ font-size: 35px;
     text-align: right;
 }
 .sPay{
-    /*background-color: #b8300c;*/
+    background-color: #b8300c;
     background-repeat: no-repeat;
     border: 0 none;
     border-radius: 25px;
@@ -546,6 +556,7 @@ font-size: 35px;
 .paybtn{
     background-repeat: no-repeat;
     width: 250px;
+    text-transform: uppercase;
 }
 
 #payresult{
@@ -795,6 +806,7 @@ font-size: 35px;
    width: 198px;
    height: 213px;
     float: right;
+
 }
 .detailtable{
 

@@ -184,10 +184,10 @@
                     <div id="hcatname" data-bind="text: prod.selectedCatname"></div>
                 </div>
                 <div id="rightbtn">
-                    <div id="invopen" class="headbtn">ARVE</div>
-                    <div id="callservice" class="headbtn">KUTSU TEENIDAJA</div>
+                    <div id="invopen" class="headbtn" data-bind="text: vm.lang.trans()['INVOICE']"></div>
+                    <div id="callservice" class="headbtn" data-bind="text: vm.lang.trans()['CALL_SERVICE']"></div>
                     <div id="orderopen" class="headbtn">
-                        <div>TELLIMUS
+                        <div><span data-bind="text: vm.lang.trans()['ORDER']"></span>
                             <span id="prodcount" data-bind="text: $root.prod.pendingOrder().length"></span>
                         </div>
                     </div>
@@ -204,7 +204,7 @@
                 </div>
 
                 <div id="waiter">
-                    <div>Teid teenindab</div>
+                    <div data-bind="text: vm.lang.trans()['AT_YOUR_SERVICE']"></div>
                     <div class="waitername" data-bind="text: prod.waiter"></div>
                 </div>
 
@@ -278,7 +278,7 @@
             <div id="ordermenu" style="display: none">
                 <div id="closeorder">
                     <span class="glyphicon glyphicon-remove"></span>
-                    <span style="font-size: 14px">VAATA/MUUDA TELLIMUST</span>
+                    <span style="font-size: 19px" data-bind="text: vm.lang.trans()['VIEW_EDIT_ORDER']"></span>
                 </div>
                 <div id="orderlist">
                     <table id="ordertbl">
@@ -297,15 +297,15 @@
                     </table>
                 </div>
                 <div id="totalsum">
-                    <span id="sumtext">SUMMA: </span>
+                    <span id="sumtext" data-bind="text: vm.lang.trans()['TOTAL_SUM']"></span>
                     <span id="sumam" class="totprice" data-bind="text: vm.prod.orderPrice"></span><span class="totprice" data-bind="text: prod.currency"></span>
                 </div>
                 <div id="notesbox">
-                    <label for="notes">MÄRKUSED</label>
+                    <label for="notes" data-bind="text: vm.lang.trans()['NOTES']"></label>
                     <textarea id="notes" name="notes" rows="5" cols="30" data-bind="value: prod.orderNotes"></textarea>
                 </div>
                 <div id="makeorder" style="text-align: right">
-                    <button id="conforder" type="button" class="fwbtn">TELLI</button>
+                    <button id="conforder" type="button" class="fwbtn" data-bind="text: vm.lang.trans()['ORDER_IT']"></button>
                 </div>
                 <div id="ajload">
                 </div>
@@ -314,22 +314,22 @@
             <!--INVOICE VIEW-->
             <div class="invoice" id="invoice" style="display: none">
                 <div id="closeinv"><span class="glyphicon glyphicon-remove"></span></div>
-                <div id="invhead">ARVE</div>
+                <div id="invhead" data-bind="text: vm.lang.trans()['INVOICE']"></div>
 
                 <div class="invcontent"  data-bind="foreach: prod.orderList">
                     <table id="invitems" class="ordertable">
                         <thead>
                         <tr>
-                            <td colspan="4" class="ordName"><span>TELLIMUS:</span><span data-bind="text: id"></span>
-                                <button id="sPayCash" class="sPay redbtn" data-method="cash" data-bind='attr:{"data-id" : id}'></button>
-                                <button id="sPayCard" class="sPay redbtn" data-method="card" data-bind='attr:{"data-id" : id}'></button>
+                            <td colspan="4" class="ordName"><span data-bind="text: vm.lang.trans()['ORDER']"></span>:<span data-bind="text: id"></span>
+                                <button id="sPayCash" class="sPay " data-method="cash" data-bind='attr:{"data-id" : id}'></button>
+                                <button id="sPayCard" class="sPay " data-method="card" data-bind='attr:{"data-id" : id}'></button>
                             </td>
                         </tr>
-                        <tr>
-                            <td style="text-align: left">SELGITUS</td>
-                            <td>KOGUS</td>
-                            <td style="white-space: nowrap">ÜHIKU HIND</td>
-                            <td>KOKKU</td>
+                        <tr style="text-transform: uppercase">
+                            <td style="text-align: left" data-bind="text: vm.lang.trans()['DESCRIPTION']"></td>
+                            <td data-bind="text: vm.lang.trans()['AMOUNT']"></td>
+                            <td style="white-space: nowrap" data-bind="text: vm.lang.trans()['UNIT_PRICE']"></td>
+                            <td data-bind="text: vm.lang.trans()['TOTAL_PRICE']"></td>
                         </tr>
                         </thead>
                         <tbody data-bind="foreach: prod">
@@ -341,26 +341,26 @@
                         </tr>
                         </tbody>
                         <tfoot>
-                        <tr id="sumtot">
-                            <td colspan="4">KOKKU: <span data-bind="text: ototal + ' ' + $root.prod.currency()"></span></td>
+                        <tr id="sumtot" style="text-transform: uppercase">
+                            <td colspan="4"><span data-bind="text: vm.lang.trans()['TOTAL_PRICE']"></span>: <span data-bind="text: ototal + ' ' + $root.prod.currency()"></span></td>
                         </tr>
                         </tfoot>
                     </table>
                 </div>
                 <div id="paymentbox">
-                    <div>Kuidas soovite tasuda</div>
+                    <div data-bind="text: vm.lang.trans()['HOW_TO_PAY']"></div>
                     <div>
-                        <button id="paycard" class="fwbtn paybtn">KAARDIGA</button>
-                        <button id="paycash" class="fwbtn paybtn">SULARAHAS</button>
+                        <button id="paycard" class="fwbtn paybtn" data-bind="text: vm.lang.trans()['WITH_CARD']"></button>
+                        <button id="paycash" class="fwbtn paybtn" data-bind="text: vm.lang.trans()['IN_CASH']"></button>
                     </div>
                 </div>
             </div>
             <!--END INVOICE VIEW-->
             <!--PAYMENT RESULT BOX-->
             <div id="payresult" class="invoice" style="display: none">
-                <div id="payres1">Täname!</div>
-                <div id="payres2">Valisite makseviisiks <span id="paytype" style="color: #b8300c"></span></div>
-                <div id="payres3">Kohe saabub teenindaja</div>
+                <div id="payres1" data-bind="text: vm.lang.trans()['THANKYOU']"></div>
+                <div id="payres2" data-bind="text: vm.lang.trans()['PAYNOTE1']"><span id="paytype" style="color: #b8300c"></span></div>
+                <div id="payres3" data-bind="text: vm.lang.trans()['PAYNOTE2']"></div>
             </div>
             <!--END PAYMENT RESULT BOX-->
         </script>
